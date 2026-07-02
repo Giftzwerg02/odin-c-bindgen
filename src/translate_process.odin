@@ -22,7 +22,9 @@ Translate_Process_Result :: struct {
 
 @(private="package")
 translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: Type_List, decls: Decl_List) -> Translate_Process_Result {
-	forward_declare_resolved: map[string]bool
+	Forward_Declare_Key :: struct { name: string, category: Category }
+
+	forward_declare_resolved: map[Forward_Declare_Key]bool
 
 	to_remove: map[string]struct{}
 
@@ -37,12 +39,12 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 		}
 
 		if d.is_forward_declare {
-			if d.name in forward_declare_resolved {
+			if ({name = d.name, category = d.category} in forward_declare_resolved) {
 				d.invalid = true
 				continue
 			}
 
-			forward_declare_resolved[d.name] = false
+			forward_declare_resolved[{name = d.name, category = d.category}] = false
 		}
 	}
 
@@ -52,8 +54,8 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 			continue
 		}
 
-		if d.category == .Proc && !d.is_forward_declare && d.name in forward_declare_resolved {
-			forward_declare_resolved[d.name] = true
+		if !d.is_forward_declare && {name = d.name, category = d.category} in forward_declare_resolved {
+			forward_declare_resolved[{name = d.name, category = d.category}] = true
 		}
 	}
 
@@ -102,7 +104,7 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 			continue
 		}
 
-		if d.is_forward_declare && forward_declare_resolved[d.name] {
+		if d.is_forward_declare && forward_declare_resolved[{name = d.name, category = d.category}] {
 			d.invalid = true
 			continue
 		}

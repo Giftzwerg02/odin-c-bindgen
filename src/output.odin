@@ -25,6 +25,7 @@ output :: proc(types: Type_List, decls: Decl_List, o: Output_Input, filename: st
 	}
 
 	pfln(sb, "package %v\n", package_name)
+	pfln(sb, "import \"core:c\"\n")
 
 	if len(o.extra_imports) > 0 {
 		for ei in o.extra_imports {
