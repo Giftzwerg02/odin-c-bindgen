@@ -337,6 +337,10 @@ verify_names_are_unique :: proc(decls: Decl_List) {
 	defer delete(found_names)
 
 	for decl in decls {
+		if decl.is_forward_declare {
+			continue
+		}
+
 		other_decl, ok := found_names[decl.name]
 
 		// We found a duplicate.
