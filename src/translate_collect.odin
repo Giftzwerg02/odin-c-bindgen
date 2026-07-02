@@ -256,6 +256,7 @@ create_declaration :: proc(c: clang.Cursor, tcs: ^Translate_Collect_State, confi
 				original_line = line,
 				side_comment = side_comment,
 				is_forward_declare = is_forward_declare,
+				category = .Type,
 			})
 		}
 
@@ -280,6 +281,7 @@ create_declaration :: proc(c: clang.Cursor, tcs: ^Translate_Collect_State, confi
 			original_line = line,
 			side_comment = side_comment,
 			is_forward_declare = is_forward_declare,
+			category = .Type
 		})
 		
 	case .EnumDecl:
@@ -304,6 +306,7 @@ create_declaration :: proc(c: clang.Cursor, tcs: ^Translate_Collect_State, confi
 
 							// It's not really from a macro, but it's probably best if it behaves as if.
 							from_macro = true,
+							category = .Macro,
 						})
 					}
 				}
@@ -319,6 +322,7 @@ create_declaration :: proc(c: clang.Cursor, tcs: ^Translate_Collect_State, confi
 			original_line = line,
 			side_comment = side_comment,
 			is_forward_declare = is_forward_declare,
+			category = .Type
 		})
 		
 	case .FunctionDecl:
@@ -340,6 +344,7 @@ create_declaration :: proc(c: clang.Cursor, tcs: ^Translate_Collect_State, confi
 			original_line = line,
 			side_comment = side_comment,
 			is_forward_declare = is_forward_declare,
+			category = .Proc,
 		})
 
 	case .MacroDefinition:

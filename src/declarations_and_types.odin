@@ -75,6 +75,13 @@ Decl :: struct {
 	// TODO: We currently have three "categories": types, procs and macros. Should this be enumified
 	// perhaps? The proc info comes from 'def' currently
 	from_macro: bool,
+	category: Category,
+}
+
+Category :: enum {
+	Type,
+	Proc,
+	Macro,
 }
 
 // Types such as `Type_Pointer` just refer to other types. Type such as `Type_Struct_Field` contain

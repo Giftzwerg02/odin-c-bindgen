@@ -70,9 +70,12 @@ output :: proc(types: Type_List, decls: Decl_List, o: Output_Input, filename: st
 
 		proc_type, is_proc := resolve_type_definition(types, d.def, Type_Procedure)
 
-		if is_proc {
+		switch d.category {
+		case .Type:
+			kind = .Default
+		case .Proc:
 			kind = .Proc
-		} else if d.from_macro {
+		case .Macro:
 			kind = .Macro
 		}
 

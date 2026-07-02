@@ -52,7 +52,7 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 			continue
 		}
 
-		if !d.is_forward_declare && d.name in forward_declare_resolved {
+		if d.category == .Proc && !d.is_forward_declare && d.name in forward_declare_resolved {
 			forward_declare_resolved[d.name] = true
 		}
 	}
@@ -315,11 +315,30 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 	// Run this last! Otherwise mapping that assumes things has their original names may fail.
 	resolve_final_names(types, decls, config)
 
+	verify_names_are_unique(decls)
+
+
 	return {
 		top_comment = extract_top_comment(tcr.source),
 		top_code = top_code,
 		link_prefix = config.remove_function_prefix,
 		extra_imports = tcr.extra_imports,
+	}
+}
+
+verify_names_are_unique :: proc(decls: Decl_List) {
+	found_names := make(map[string]Decl)
+	defer delete(found_names)
+
+	for decl in decls {
+		other_decl, ok := found_names[decl.name]
+
+		// We found a duplicate.
+		if ok {
+			log.warnf("Declaration name clash on: `%s`. (%v, %v)", decl.name, decl, other_decl)
+		}
+
+		found_names[decl.name] = decl
 	}
 }
 
