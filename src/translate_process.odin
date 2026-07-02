@@ -61,6 +61,10 @@ translate_process :: proc(tcr: Translate_Collect_Result, config: Config, types: 
 
 	// Replace types
 	for &d in decls {
+		if d.category != .Type {
+			continue
+		}
+
 		override: bool
 		override_definition_text: string
 
