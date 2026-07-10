@@ -1,6 +1,7 @@
 *.pdb
 *.rdi
 *.exe
+*.bin
 scrap
 compile_examples.bat
 .vscode
